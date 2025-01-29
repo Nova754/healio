@@ -33,6 +33,7 @@ const likesRoutes = require('./routes/likes');
 const badgesRoutes = require('./routes/badges');
 const userBadgesRoutes = require('./routes/userbadges');
 const challengesRoutes = require('./routes/challenges');
+const userChallengesRoutes = require('./routes/userchallenges');
 
 app.use('/api/users', userRoutes);
 app.use('/api/register', registerRoutes);
@@ -44,6 +45,7 @@ app.use('/api/likes', likesRoutes);
 app.use('/api/badges', badgesRoutes);
 app.use('/api/userbadges', userBadgesRoutes);
 app.use('/api/challenges', challengesRoutes);
+app.use('/api/userchallenges', userChallengesRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

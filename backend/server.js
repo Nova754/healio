@@ -24,8 +24,10 @@ const { sequelize } = require('./config/database');
 })();
 
 const userRoutes = require('./routes/users');
+const registerRoutes = require('./routes/register');
 
 app.use('/api/users', userRoutes);
+app.use('/api/register', registerRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

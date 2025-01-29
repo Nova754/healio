@@ -29,6 +29,7 @@ const loginRoutes = require('./routes/login');
 const postsRoutes = require('./routes/posts');
 const subscriptionsRoutes = require('./routes/subscriptions');
 const commentsRoutes = require('./routes/comments');
+const likesRoutes = require('./routes/likes');
 
 app.use('/api/users', userRoutes);
 app.use('/api/register', registerRoutes);
@@ -36,6 +37,7 @@ app.use('/api/login', loginRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
 app.use('/api/comments', commentsRoutes);
+app.use('/api/likes', likesRoutes);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', authenticateToken, authorizeRole('user'), async (req, res) => {
     try {
         const challenges = await sequelize.query(
-            `SELECT id, title, description, points_reward, start_date, end_date
+            `SELECT id, title, description, start_date, end_date
              FROM challenges
              ORDER BY start_date DESC`,
             {
@@ -26,7 +26,7 @@ router.get('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
     const { id } = req.params;
     try {
         const challenge = await sequelize.query(
-            `SELECT id, title, description, points_reward, start_date, end_date
+            `SELECT id, title, description, start_date, end_date
              FROM challenges
              WHERE id = :id`,
             {
@@ -45,17 +45,17 @@ router.get('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
 });
 
 router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
-    const { title, description, pointsReward, startDate, endDate } = req.body;
+    const { title, description, start_date, end_date } = req.body;
 
-    if (!title || !pointsReward) {
-        return res.status(400).json({ message: "Les champs 'title' et 'pointsReward' sont obligatoires." });
+    if (!title) {
+        return res.status(400).json({ message: "Le champ 'title' est obligatoire." });
     }
     try {
         await sequelize.query(
-            'INSERT INTO challenges (title, description, points_reward, start_date, end_date) VALUES (:title, :description, :pointsReward, :startDate, :endDate)',
+            'INSERT INTO challenges (title, description, start_date, end_date) VALUES (:title, :description, :start_date, :end_date)',
             {
                 type: QueryTypes.INSERT,
-                replacements: { title, description, pointsReward, startDate, endDate },
+                replacements: { title, description, start_date, end_date },
             }
         );
         res.status(201).json({ message: "Challenge créé avec succès." });
@@ -67,9 +67,9 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
 
 router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
     const { id } = req.params;
-    const { title, description, pointsReward, startDate, endDate } = req.body;
+    const { title, description, start_date, end_date } = req.body;
 
-    if (!title && !description && !pointsReward && !startDate && !endDate) {
+    if (!title && !description && !start_date && !end_date) {
         return res.status(400).json({ message: "Au moins un champ doit être fourni pour la mise à jour." });
     }
     try {
@@ -87,13 +87,12 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
             `UPDATE challenges
              SET title = COALESCE(:title, title),
                  description = COALESCE(:description, description),
-                 points_reward = COALESCE(:pointsReward, points_reward),
-                 start_date = COALESCE(:startDate, start_date),
-                 end_date = COALESCE(:endDate, end_date)
+                 start_date = COALESCE(:start_date, start_date),
+                 end_date = COALESCE(:end_date, end_date)
              WHERE id = :id`,
             {
                 type: QueryTypes.UPDATE,
-                replacements: { title, description, pointsReward, startDate, endDate, id },
+                replacements: { title, description, start_date, end_date, id },
             }
         );
         res.status(200).json({ message: "Challenge mis à jour avec succès." });
@@ -106,6 +105,12 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
 router.patch('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
+    const allowedFields = ['title', 'description', 'start_date', 'end_date'];
+    for (const key in updates) {
+        if (!allowedFields.includes(key)) {
+            delete updates[key];
+        }
+    }
     if (!updates || Object.keys(updates).length === 0) {
         return res.status(400).json({ message: "Aucune donnée à mettre à jour." });
     }

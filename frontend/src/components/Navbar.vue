@@ -6,6 +6,9 @@
         <ion-button v-for="link in filteredLinks" :key="link.path" @click="navigateTo(link.path)">
           {{ link.label }}
         </ion-button>
+        <ion-button v-if="isAdmin" @click="navigateTo('/admindashboard')">
+          Dashboard Admin
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -19,9 +22,18 @@ import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton } from '@ionic/v
 const router = useRouter();
 const route = useRoute();
 const isAuthenticated = ref(false);
+const isAdmin = ref(false);
 
 const checkAuth = () => {
-  isAuthenticated.value = !!localStorage.getItem('token');
+  const token = localStorage.getItem('token');
+  isAuthenticated.value = !!token;
+  const user = localStorage.getItem('user');
+  if (user) {
+    const parsedUser = JSON.parse(user);
+    isAdmin.value = parsedUser.role === 'admin';
+  } else {
+    isAdmin.value = false;
+  }
 };
 
 const hiddenRoutes = ['/login', '/register'];
@@ -42,6 +54,7 @@ const filteredLinks = computed(() => {
       { path: '/home', label: 'Home' },
       { path: '/create-post', label: 'Créer une publication' },
       { path: '/profile', label: 'Mon Profil' },
+      { path: '/challenges', label: 'Challenges' },
       { path: '/logout', label: 'Logout', action: logout }
     ];
   } else {

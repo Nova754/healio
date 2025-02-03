@@ -70,7 +70,7 @@
       successMessage.value = "Inscription réussie ! Redirection...";
       
       setTimeout(() => {
-        router.push('/login'); // Redirige vers la page de connexion après l'inscription
+        router.push('/login');
       }, 2000);
     } catch (error) {
       console.error('Erreur lors de l\'inscription:', error);

@@ -3,6 +3,8 @@ import { RouteRecordRaw } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
 import LoginPage from '../views/Login.vue';
 import RegisterPage from '../views/Register.vue';
+import CreatePostPage from '../views/CreatePost.vue';
+import ProfilPage from '../views/Profil.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', redirect: '/home' },
@@ -17,7 +19,9 @@ const routes: Array<RouteRecordRaw> = [
       localStorage.removeItem('user');
       next();
     }
-  }
+  },
+  { path: '/create-post', name: 'CreatePost', component: CreatePostPage },
+  { path: '/profile', name: 'Profil', component: ProfilPage }
 ];
 
 const router = createRouter({

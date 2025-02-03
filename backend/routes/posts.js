@@ -47,7 +47,11 @@ router.get('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
 });
 
 router.post('/', authenticateToken, authorizeRole('researcher'), async (req, res) => {
-    const { userId, content, media } = req.body;
+    console.log("Données reçues pour la publication :", req.body);
+    let { userId, content, media } = req.body;
+    if (!media || Object.keys(media).length === 0) {
+        media = null;
+    }
     if (!userId || !content) {
         return res.status(400).json({ message: "Les champs 'userId' et 'content' sont obligatoires." });
     }

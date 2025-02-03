@@ -85,18 +85,32 @@ router.put('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
 });
 
 router.patch('/:id', authenticateToken, authorizeRole('user'), async (req, res) => {
-    const { id } = req.params;
+    console.log("Données reçues pour la mise à jour :", req.body);
     const updates = req.body;
-    if (req.user.id !== parseInt(id, 10) && req.user.role !== 'admin') {
-        return res.status(403).json({ message: "Vous ne pouvez modifier que vos propres informations." });
+    if (!updates || Object.keys(updates).length === 0) {
+        return res.status(400).json({ message: "Aucune donnée à mettre à jour." });
     }
-    const setClause = Object.keys(updates).map((key) => `${key} = :${key}`).join(', ');
+    if (updates.email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(updates.email)) {
+            return res.status(400).json({ message: "Email invalide." });
+        }
+    }
+    if (updates.password) {
+        if (updates.password.length < 6) {
+            return res.status(400).json({ message: "Le mot de passe doit contenir au moins 6 caractères." });
+        }
+        updates.password = await bcrypt.hash(updates.password, 10);
+    }
+    const setClause = Object.keys(updates)
+        .map(key => `${key} = :${key}`)
+        .join(', ');
     try {
         const [updated] = await sequelize.query(
             `UPDATE users SET ${setClause} WHERE id = :id`,
             {
                 type: QueryTypes.UPDATE,
-                replacements: { ...updates, id },
+                replacements: { ...updates, id: req.params.id }
             }
         );
         if (updated === 0) {
@@ -104,33 +118,32 @@ router.patch('/:id', authenticateToken, authorizeRole('user'), async (req, res) 
         }
         res.status(200).json({ message: "Informations mises à jour avec succès." });
     } catch (error) {
-        console.error('Erreur lors de la mise à jour partielle de l\'utilisateur :', error);
-        res.status(500).json({ message: 'Erreur interne du serveur' });
+        console.error('Erreur lors de la mise à jour du profil:', error);
+        res.status(500).json({ message: 'Erreur interne du serveur.' });
     }
 });
 
 router.delete('/:id', authenticateToken, authorizeRole('user'), async (req, res) => {
     const { id } = req.params;
     if (req.user.id !== parseInt(id, 10) && req.user.role !== 'admin') {
-        return res.status(403).json({ message: "Vous ne pouvez supprimer que votre propre compte." });
+      return res.status(403).json({ message: "Vous ne pouvez supprimer que votre propre compte." });
     }
     try {
-        const deleted = await sequelize.query(
-            'DELETE FROM users WHERE id = :id',
-            {
-                type: QueryTypes.DELETE,
-                replacements: { id },
-            }
-        );
-        if (deleted[0] === 0) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
+      const result = await sequelize.query(
+        'DELETE FROM users WHERE id = :id',
+        {
+          replacements: { id }
         }
-        res.status(200).json({ message: "Compte utilisateur supprimé avec succès." });
+      );
+      if (result[1].affectedRows === 0) {
+        return res.status(404).json({ message: "Utilisateur non trouvé." });
+      }
+      res.status(200).json({ message: "Compte utilisateur supprimé avec succès." });
     } catch (error) {
-        console.error('Erreur lors de la suppression de l\'utilisateur :', error);
-        res.status(500).json({ message: 'Erreur interne du serveur' });
+      console.error('Erreur lors de la suppression de l\'utilisateur :', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
     }
-});
+});  
 
 router.head('/:id', authenticateToken, authorizeRole('user'), async (req, res) => {
     const { id } = req.params;

@@ -45,16 +45,16 @@ router.get('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
 });
 
 router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
-    const { name, description, iconUrl } = req.body;
+    const { name, description, icon_url } = req.body;
     if (!name) {
         return res.status(400).json({ message: "Le champ 'name' est obligatoire." });
     }
     try {
         await sequelize.query(
-            'INSERT INTO badges (name, description, icon_url) VALUES (:name, :description, :iconUrl)',
+            'INSERT INTO badges (name, description, icon_url) VALUES (:name, :description, :icon_url)',
             {
                 type: QueryTypes.INSERT,
-                replacements: { name, description, iconUrl },
+                replacements: { name, description, icon_url },
             }
         );
         res.status(201).json({ message: "Badge créé avec succès." });
@@ -66,9 +66,9 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
 
 router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
     const { id } = req.params;
-    const { name, description, iconUrl } = req.body;
-    if (!name && !description && !iconUrl) {
-        return res.status(400).json({ message: "Au moins un champ ('name', 'description', 'iconUrl') doit être fourni pour la mise à jour." });
+    const { name, description, icon_url } = req.body;
+    if (!name && !description && !icon_url) {
+        return res.status(400).json({ message: "Au moins un des champs ('name', 'description', 'icon_url') doit être fourni pour la mise à jour." });
     }
     try {
         const badge = await sequelize.query(
@@ -82,10 +82,10 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
             return res.status(404).json({ message: "Badge introuvable." });
         }
         await sequelize.query(
-            'UPDATE badges SET name = COALESCE(:name, name), description = COALESCE(:description, description), icon_url = COALESCE(:iconUrl, icon_url) WHERE id = :id',
+            'UPDATE badges SET name = COALESCE(:name, name), description = COALESCE(:description, description), icon_url = COALESCE(:icon_url, icon_url) WHERE id = :id',
             {
                 type: QueryTypes.UPDATE,
-                replacements: { name, description, iconUrl, id },
+                replacements: { name, description, icon_url, id },
             }
         );
         res.status(200).json({ message: "Badge mis à jour avec succès." });
@@ -98,10 +98,16 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
 router.patch('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
+    const allowedFields = ['name', 'description', 'icon_url'];
+    for (const key in updates) {
+        if (!allowedFields.includes(key)) {
+            delete updates[key];
+        }
+    }
     if (!updates || Object.keys(updates).length === 0) {
         return res.status(400).json({ message: "Aucune donnée à mettre à jour." });
     }
-    const setClause = Object.keys(updates).map((key) => `${key} = :${key}`).join(', ');
+    const setClause = Object.keys(updates).map(key => `${key} = :${key}`).join(', ');
     try {
         const badge = await sequelize.query(
             'SELECT id FROM badges WHERE id = :id',

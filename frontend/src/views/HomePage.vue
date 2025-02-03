@@ -10,13 +10,18 @@
       <ion-list v-if="posts.length">
         <ion-card v-for="post in posts" :key="post.id">
           <ion-card-header>
-            <ion-card-title>{{ post.title }}</ion-card-title>
             <ion-card-title>
-              {{ post.firstName ? post.firstName : 'Utilisateur inconnu' }} 
-              {{ post.lastName ? post.lastName : '' }}
+              <router-link
+                :to="{ name: 'PublisherProfile', params: { id: post.user_id } }"
+                class="publisher-link"
+              >
+                {{ post.firstName ? post.firstName : 'Utilisateur inconnu' }}
+                {{ post.lastName ? post.lastName : '' }}
+              </router-link>
             </ion-card-title>
             <ion-card-subtitle>{{ formatDate(post.created_at) }}</ion-card-subtitle>
           </ion-card-header>
+
           <ion-card-content @click="openPostModal(post)" style="cursor: pointer;">
             <p>{{ truncateContent(post.content) }}</p>
           </ion-card-content>
@@ -62,12 +67,15 @@
           <div v-if="selectedPost">
             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <p>
+                <router-link
+                  :to="{ name: 'PublisherProfile', params: { id: selectedPost.user_id } }"
+                  class="publisher-link"
+                >
                   <strong>
                     {{ selectedPost.firstName ? selectedPost.firstName : 'Utilisateur inconnu' }}
                     {{ selectedPost.lastName ? selectedPost.lastName : '' }}
                   </strong>
-                </p>
+                </router-link>
                 <p class="date">{{ formatDate(selectedPost.created_at) }}</p>
               </div>
               <div class="likes" style="display: flex; align-items: center; cursor: pointer;" @click="toggleLike(selectedPost.id)">
@@ -102,11 +110,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { 
-  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonCard, 
-  IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonItem, 
-  IonLabel, IonInput, IonButton, IonIcon, IonSpinner, IonRow, IonButtons, IonModal
-} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonSpinner, IonRow, IonButtons, IonModal } from '@ionic/vue';
 import { chatbubbleOutline, heartOutline, heart } from 'ionicons/icons';
 import axios from 'axios';
 import Navbar from '@/components/Navbar.vue';
@@ -119,6 +123,7 @@ interface Post {
   created_at: string;
   firstName?: string;
   lastName?: string;
+  user_id: number;
   comments: any[];
   showComments: boolean;
   likes: number;
@@ -128,15 +133,23 @@ interface Post {
 const posts = ref<Post[]>([]);
 const newComment = ref<Record<number, string>>({});
 const user = ref<any>(null);
+const mySubscriptions = ref<number[]>([]);
 
 const selectedPost = ref<Post | null>(null);
 const isPostModalOpen = ref<boolean>(false);
 const newCommentModal = ref<string>('');
 
-onMounted(async () => {
-  user.value = JSON.parse(localStorage.getItem('user') || 'null');
-  await fetchPosts();
-});
+const fetchSubscriptions = async () => {
+  if (!user.value) return;
+  try {
+    const response = await axios.get(`http://localhost:8081/api/subscriptions/${user.value.id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    mySubscriptions.value = response.data.map((u: any) => u.id);
+  } catch (error) {
+    console.error("Erreur lors du chargement des abonnements:", error);
+  }
+};
 
 const fetchPosts = async () => {
   try {
@@ -277,6 +290,33 @@ const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString();
 };
 
+const isSubscribed = (publisherId: number) => {
+  return mySubscriptions.value.includes(publisherId);
+};
+
+const toggleSubscription = async (publisherId: number) => {
+  if (!user.value) return;
+  try {
+    if (mySubscriptions.value.includes(publisherId)) {
+      await axios.delete('http://localhost:8081/api/subscriptions', {
+        data: { followerId: user.value.id, followedId: publisherId },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      mySubscriptions.value = mySubscriptions.value.filter(id => id !== publisherId);
+    } else {
+      await axios.post('http://localhost:8081/api/subscriptions', {
+        followerId: user.value.id,
+        followedId: publisherId
+      }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      mySubscriptions.value.push(publisherId);
+    }
+  } catch (error) {
+    console.error("Erreur lors de la modification de l'abonnement :", error);
+  }
+};
+
 const openPostModal = async (post: Post) => {
   selectedPost.value = post;
   await fetchComments(post.id);
@@ -287,14 +327,21 @@ const closePostModal = () => {
   isPostModalOpen.value = false;
   selectedPost.value = null;
 };
+
+onMounted(async () => {
+  user.value = JSON.parse(localStorage.getItem('user') || 'null');
+  await fetchPosts();
+  await fetchSubscriptions();
+});
 </script>
 
 <style scoped>
-.modal-header h2 {
-  margin: 0;
-}
 .date {
   font-size: 0.9em;
   color: #666;
+}
+.publisher-link {
+  text-decoration: none;
+  color: inherit;
 }
 </style>

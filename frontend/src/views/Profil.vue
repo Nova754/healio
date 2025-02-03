@@ -108,7 +108,7 @@ const updateProfile = async () => {
     updates.password = password.value;
   }
 
-  console.log("Données envoyées :", updates); // 🔍 Debugging
+  console.log("Données envoyées :", updates);
 
   try {
     const response = await axios.patch(`http://localhost:8081/api/users/${user.value.id}`, updates, {
@@ -123,6 +123,5 @@ const updateProfile = async () => {
   }
 };
 
-// ✅ Charger les infos au montage
 onMounted(fetchUserProfile);
 </script>

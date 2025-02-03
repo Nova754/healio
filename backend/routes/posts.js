@@ -8,7 +8,8 @@ const router = express.Router();
 router.get('/', authenticateToken, authorizeRole('user'), async (req, res) => {
     try {
         const posts = await sequelize.query(
-            `SELECT p.id, p.content, p.media, p.created_at, u.id AS user_id, u.firstName, u.lastName, u.email
+            `SELECT p.id, p.title, p.content, p.images, p.created_at, 
+                    u.id AS user_id, u.firstName, u.lastName, u.email
              FROM posts p
              JOIN users u ON p.user_id = u.id
              ORDER BY p.created_at DESC`,
@@ -27,7 +28,8 @@ router.get('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
     const { id } = req.params;
     try {
         const post = await sequelize.query(
-            `SELECT p.id, p.content, p.media, p.created_at, u.id AS user_id, u.firstName, u.lastName, u.email
+            `SELECT p.id, p.title, p.content, p.images, p.created_at, 
+                    u.id AS user_id, u.firstName, u.lastName, u.email
              FROM posts p
              JOIN users u ON p.user_id = u.id
              WHERE p.id = :id`,
@@ -46,21 +48,18 @@ router.get('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
     }
 });
 
-router.post('/', authenticateToken, authorizeRole('researcher'), async (req, res) => {
+router.post('/', authenticateToken, authorizeRole('user'), async (req, res) => {
     console.log("Données reçues pour la publication :", req.body);
-    let { userId, content, media } = req.body;
-    if (!media || Object.keys(media).length === 0) {
-        media = null;
-    }
-    if (!userId || !content) {
-        return res.status(400).json({ message: "Les champs 'userId' et 'content' sont obligatoires." });
+    let { userId, title, content, images } = req.body;
+    if (!userId || !title || !content) {
+        return res.status(400).json({ message: "Les champs 'userId', 'title' et 'content' sont obligatoires." });
     }
     try {
         await sequelize.query(
-            'INSERT INTO posts (user_id, content, media) VALUES (:userId, :content, :media)',
+            'INSERT INTO posts (user_id, title, content, images) VALUES (:userId, :title, :content, :images)',
             {
                 type: QueryTypes.INSERT,
-                replacements: { userId, content, media },
+                replacements: { userId, title, content, images },
             }
         );
         res.status(201).json({ message: "Publication créée avec succès." });
@@ -70,11 +69,11 @@ router.post('/', authenticateToken, authorizeRole('researcher'), async (req, res
     }
 });
 
-router.put('/:id', authenticateToken, authorizeRole('researcher'), async (req, res) => {
+router.put('/:id', authenticateToken, authorizeRole('user'), async (req, res) => {
     const { id } = req.params;
-    const { content, media } = req.body;
-    if (!content && !media) {
-        return res.status(400).json({ message: "Au moins un des champs 'content' ou 'media' doit être fourni." });
+    const { title, content, images } = req.body;
+    if (!title && !content && !images) {
+        return res.status(400).json({ message: "Au moins un des champs 'title', 'content' ou 'images' doit être fourni pour la mise à jour." });
     }
     try {
         const post = await sequelize.query(
@@ -91,10 +90,10 @@ router.put('/:id', authenticateToken, authorizeRole('researcher'), async (req, r
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier cette publication." });
         }
         await sequelize.query(
-            'UPDATE posts SET content = COALESCE(:content, content), media = COALESCE(:media, media) WHERE id = :id',
+            'UPDATE posts SET title = COALESCE(:title, title), content = COALESCE(:content, content), images = COALESCE(:images, images) WHERE id = :id',
             {
                 type: QueryTypes.UPDATE,
-                replacements: { content, media, id },
+                replacements: { title, content, images, id },
             }
         );
         res.status(200).json({ message: "Publication mise à jour avec succès." });
@@ -104,7 +103,7 @@ router.put('/:id', authenticateToken, authorizeRole('researcher'), async (req, r
     }
 });
 
-router.patch('/:id', authenticateToken, authorizeRole('researcher'), async (req, res) => {
+router.patch('/:id', authenticateToken, authorizeRole('user'), async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     if (!updates || Object.keys(updates).length === 0) {
@@ -139,7 +138,7 @@ router.patch('/:id', authenticateToken, authorizeRole('researcher'), async (req,
     }
 });
 
-router.delete('/:id', authenticateToken, authorizeRole('researcher'), async (req, res) => {
+router.delete('/:id', authenticateToken, authorizeRole('user'), async (req, res) => {
     const { id } = req.params;
     try {
         const post = await sequelize.query(

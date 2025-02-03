@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <Navbar />
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Publications</ion-title>
@@ -61,6 +62,7 @@ import {
 } from '@ionic/vue';
 import { chatbubbleOutline, heartOutline, heart } from 'ionicons/icons';
 import axios from 'axios';
+import Navbar from '@/components/Navbar.vue';
 
 const posts = ref([]);
 const newComment = ref({});
@@ -110,7 +112,6 @@ const checkIfUserLikedPost = async (postId) => {
   }
 };
 
-// ✅ Gérer les likes
 const toggleLike = async (postId) => {
   if (!user.value) return;
 

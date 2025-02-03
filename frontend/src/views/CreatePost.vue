@@ -1,5 +1,7 @@
 <template>
   <ion-page>
+    <Navbar />
+
     <ion-header>
       <ion-toolbar>
         <ion-title>Créer une publication</ion-title>
@@ -13,8 +15,11 @@
         </ion-card-header>
         <ion-card-content>
           <ion-input v-model="userId" type="number" label="Votre ID Utilisateur" placeholder="Entrez votre ID"></ion-input>
+
           <ion-input v-model="content" type="text" label="Contenu" placeholder="Écrivez votre publication..."></ion-input>
+
           <input type="file" @change="handleFileUpload" accept="image/*" />
+
           <ion-button expand="full" @click="createPost">Publier</ion-button>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
           <p v-if="successMessage" class="success">{{ successMessage }}</p>
@@ -84,7 +89,7 @@ const createPost = async () => {
     media: mediaFile.value ? mediaFile.value.name : null 
   };
 
-  console.log("Données envoyées :", postData);
+  console.log("Données envoyées :", postData); 
 
   try {
     const response = await axios.post('http://localhost:8081/api/posts', postData, {

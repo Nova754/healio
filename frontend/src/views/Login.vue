@@ -54,7 +54,7 @@
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        router.push('/home'); // Redirection après connexion réussie
+        router.push('/home');
       }
     } catch (error) {
       console.error('Erreur de connexion:', error);

@@ -20,12 +20,10 @@ const router = useRouter();
 const route = useRoute();
 const isAuthenticated = ref(false);
 
-// Vérifier si l'utilisateur est connecté
 const checkAuth = () => {
   isAuthenticated.value = !!localStorage.getItem('token');
 };
 
-// Routes où la navbar ne doit pas apparaître
 const hiddenRoutes = ['/login', '/register'];
 const showNavbar = computed(() => !hiddenRoutes.includes(route.path));
 
@@ -38,7 +36,6 @@ const logout = () => {
   router.push('/login');
 };
 
-// Définition des liens de navigation dynamiques
 const filteredLinks = computed(() => {
   if (isAuthenticated.value) {
     return [
@@ -56,7 +53,6 @@ const filteredLinks = computed(() => {
   }
 });
 
-// Gérer la navigation
 const navigateTo = (path) => {
   if (path === '/logout') {
     logout();

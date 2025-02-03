@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Dashboard Administrateur - Gestion des Utilisateurs</ion-title>
+        <ion-title>Dashboard Administrateur</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -154,7 +154,7 @@ const deleteUser = async (userId: number) => {
 
 
 const selectUser = (user: User) => {
-  selectedUser.value = { ...user }; // Copie pour éviter de modifier directement la liste affichée
+  selectedUser.value = { ...user };
   isModalOpen.value = true;
 };
 
@@ -170,7 +170,6 @@ const updateUser = async () => {
   errorMessage.value = '';
   successMessage.value = '';
   try {
-    // Exclure les propriétés non modifiables
     const { id, created_at, ...updates } = selectedUser.value;
     await axios.patch(`http://localhost:8081/api/users/${selectedUser.value.id}`, updates, {
       headers: { 

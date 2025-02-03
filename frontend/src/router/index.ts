@@ -7,6 +7,17 @@ import RegisterPage from '../views/Register.vue';
 const routes: Array<RouteRecordRaw> = [
   { path: '/', redirect: '/home' },
   { path: '/home', name: 'Home', component: HomePage },
+  { path: '/login', name: 'Login', component: LoginPage },
+  { path: '/register', name: 'Register', component: RegisterPage },
+  { path: '/logout', 
+    name: 'Logout',
+    redirect: '/login',
+    beforeEnter: (to, from, next) => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      next();
+    }
+  }
 ];
 
 const router = createRouter({

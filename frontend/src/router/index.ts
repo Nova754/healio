@@ -5,6 +5,7 @@ import LoginPage from '../views/Login.vue';
 import RegisterPage from '../views/Register.vue';
 import CreatePostPage from '../views/CreatePost.vue';
 import ProfilPage from '../views/Profil.vue';
+import DashboardAdmin from '../views/DashboardAdmin.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', redirect: '/home' },
@@ -21,7 +22,8 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   { path: '/create-post', name: 'CreatePost', component: CreatePostPage },
-  { path: '/profile', name: 'Profil', component: ProfilPage }
+  { path: '/profile', name: 'Profil', component: ProfilPage },
+  { path: '/admindashboard', name: 'DashboardAdmin', component: DashboardAdmin }
 ];
 
 const router = createRouter({

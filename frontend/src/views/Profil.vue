@@ -1,5 +1,7 @@
 <template>
   <ion-page>
+    <Navbar />
+
     <ion-header>
       <ion-toolbar>
         <ion-title>Mon Profil</ion-title>
@@ -106,7 +108,7 @@ const updateProfile = async () => {
     updates.password = password.value;
   }
 
-  console.log("Données envoyées :", updates);
+  console.log("Données envoyées :", updates); // 🔍 Debugging
 
   try {
     const response = await axios.patch(`http://localhost:8081/api/users/${user.value.id}`, updates, {
@@ -121,5 +123,6 @@ const updateProfile = async () => {
   }
 };
 
+// ✅ Charger les infos au montage
 onMounted(fetchUserProfile);
 </script>

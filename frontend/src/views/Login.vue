@@ -64,10 +64,57 @@
   </script>
   
   <style scoped>
-  .error {
-    color: red;
-    text-align: center;
-    margin-top: 10px;
-  }
+ ion-content {
+  --background: linear-gradient(to bottom, #1e3a8a, #050a30);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+ion-card {
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+ion-card-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+ion-input {
+  --background: white;
+  --border-radius: 8px;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+ion-button {
+  --background: #f97316;
+  --border-radius: 8px;
+  --box-shadow: 0px 4px 8px rgba(249, 115, 22, 0.5);
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+ion-button:hover {
+  --background: #d86012;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
   </style>
   

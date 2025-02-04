@@ -336,9 +336,10 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
 .date {
   font-size: 0.9em;
-  color: #666;
+  color: #00ff1a;
 }
 .publisher-link {
   text-decoration: none;

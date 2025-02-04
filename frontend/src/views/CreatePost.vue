@@ -1,7 +1,6 @@
 <template>
   <ion-page>
-    <Navbar />
-
+    <Navbar2 />
     <ion-header>
       <ion-toolbar>
         <ion-title>Créer une publication</ion-title>
@@ -26,8 +25,7 @@
             label="Contenu"
             placeholder="Écrivez votre publication...">
           </ion-input>
-          
-          <input type="file" @change="handleImagesUpload" accept="image/*" multiple />
+                    <input type="file" @change="handleImagesUpload" accept="image/*" multiple />
 
           <ion-button expand="full" @click="createPost">Publier</ion-button>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
@@ -35,14 +33,20 @@
         </ion-card-content>
       </ion-card>
     </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <Navbar />
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonInput, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonInput, IonButton, IonFooter } from '@ionic/vue';
 import axios from 'axios';
+import Navbar2 from '@/components/Navbar2.vue';
 import Navbar from '@/components/Navbar.vue';
 
 const title = ref('');
@@ -123,16 +127,3 @@ const createPost = async () => {
 
 onMounted(fetchUserId);
 </script>
-
-<style scoped>
-.error {
-  color: red;
-  text-align: center;
-  margin-top: 10px;
-}
-.success {
-  color: green;
-  text-align: center;
-  margin-top: 10px;
-}
-</style>

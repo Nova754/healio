@@ -1,5 +1,6 @@
 <template>
     <ion-page>
+      <navbar2 />
       <ion-header>
         <ion-toolbar>
           <ion-title>
@@ -91,6 +92,11 @@
           </ion-content>
         </ion-modal>
       </ion-content>
+      <ion-footer>
+      <ion-toolbar>
+        <Navbar />
+      </ion-toolbar>
+    </ion-footer>
     </ion-page>
   </template>
   
@@ -105,6 +111,8 @@
   } from '@ionic/vue';
   import axios from 'axios';
   import { heartOutline, heart } from 'ionicons/icons';
+  import Navbar from '@/components/Navbar.vue';
+  import Navbar2 from '@/components/Navbar2.vue';
   
   interface Post {
     id: number;
@@ -322,11 +330,3 @@
     await fetchLatestPosts();
   });
   </script>
-  
-  <style scoped>
-  .date {
-    font-size: 0.9em;
-    color: #666;
-  }
-  </style>
-  

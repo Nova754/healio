@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <Navbar2 />
     <ion-header>
       <ion-toolbar>
         <ion-title>Dashboard Administrateur</ion-title>
@@ -12,6 +13,7 @@
       </ion-segment>
     </ion-header>
     <ion-content class="ion-padding">
+      <!-- Section Utilisateurs -->
       <div v-if="selectedSegment === 'users'">
         <h2>Gestion des Utilisateurs</h2>
         <ion-button expand="full" @click="openUserCreateModal">Ajouter un utilisateur</ion-button>
@@ -29,6 +31,7 @@
         </ion-list>
         <ion-spinner v-else></ion-spinner>
       </div>
+      <!-- Section Posts -->
       <div v-if="selectedSegment === 'posts'">
         <h2>Gestion des Posts</h2>
         <ion-list v-if="paginatedPosts.length">
@@ -44,12 +47,13 @@
           </ion-item>
         </ion-list>
         <ion-spinner v-else></ion-spinner>
-        <div class="pagination-controls" style="display: flex; justify-content: space-between; margin-top: 16px;">
+        <div class="pagination-controls">
           <ion-button @click="prevPage" :disabled="currentPage === 1">Précédent</ion-button>
           <span>Page {{ currentPage }} sur {{ totalPages }}</span>
           <ion-button @click="nextPage" :disabled="currentPage === totalPages">Suivant</ion-button>
         </div>
       </div>
+      <!-- Section Badges -->
       <div v-if="selectedSegment === 'badges'">
         <h2>Gestion des Badges</h2>
         <ion-button expand="full" @click="openBadgeCreateModal">Ajouter un badge</ion-button>
@@ -66,6 +70,7 @@
         </ion-list>
         <ion-spinner v-else></ion-spinner>
       </div>
+      <!-- Section Challenges -->
       <div v-if="selectedSegment === 'challenges'">
         <h2>Gestion des Challenges</h2>
         <ion-button expand="full" @click="openChallengeCreateModal">Ajouter un challenge</ion-button>
@@ -84,6 +89,7 @@
         <ion-spinner v-else></ion-spinner>
       </div>
     </ion-content>
+    <!-- Modal pour éditer un utilisateur -->
     <ion-modal v-model:isOpen="isUserModalOpen">
       <ion-header>
         <ion-toolbar>
@@ -121,6 +127,7 @@
         <ion-button expand="full" @click="updateUser">Enregistrer</ion-button>
       </ion-content>
     </ion-modal>
+    <!-- Modal pour créer un nouvel utilisateur -->
     <ion-modal v-model:isOpen="isUserCreateModalOpen">
       <ion-header>
         <ion-toolbar>
@@ -162,6 +169,7 @@
         <ion-button expand="full" @click="createUser">Créer l'utilisateur</ion-button>
       </ion-content>
     </ion-modal>
+    <!-- Modal pour éditer un post -->
     <ion-modal v-model:isOpen="isPostModalOpen">
       <ion-header>
         <ion-toolbar>
@@ -183,6 +191,7 @@
         <ion-button expand="full" @click="updatePost">Enregistrer</ion-button>
       </ion-content>
     </ion-modal>
+    <!-- Modal pour éditer un badge -->
     <ion-modal v-model:isOpen="isBadgeModalOpen">
       <ion-header>
         <ion-toolbar>
@@ -208,6 +217,7 @@
         <ion-button expand="full" @click="updateBadge">Enregistrer</ion-button>
       </ion-content>
     </ion-modal>
+    <!-- Modal pour créer un nouveau badge -->
     <ion-modal v-model:isOpen="isBadgeCreateModalOpen">
       <ion-header>
         <ion-toolbar>
@@ -233,6 +243,7 @@
         <ion-button expand="full" @click="createBadge">Créer le badge</ion-button>
       </ion-content>
     </ion-modal>
+    <!-- Modal pour éditer un challenge -->
     <ion-modal v-model:isOpen="isChallengeModalOpen">
       <ion-header>
         <ion-toolbar>
@@ -262,6 +273,7 @@
         <ion-button expand="full" @click="updateChallenge">Enregistrer</ion-button>
       </ion-content>
     </ion-modal>
+    <!-- Modal pour créer un nouveau challenge -->
     <ion-modal v-model:isOpen="isChallengeCreateModalOpen">
       <ion-header>
         <ion-toolbar>
@@ -291,6 +303,11 @@
         <ion-button expand="full" @click="createChallenge">Créer le challenge</ion-button>
       </ion-content>
     </ion-modal>
+    <ion-footer>
+      <ion-toolbar>
+        <Navbar />
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -326,6 +343,8 @@ import {
 } from '@ionic/vue';
 import axios from 'axios';
 import { heartOutline, heart } from 'ionicons/icons';
+import Navbar2 from '@/components/Navbar2.vue';
+import Navbar from '@/components/Navbar.vue';
 
 const router = useRouter();
 const selectedSegment = ref('users');
@@ -733,13 +752,3 @@ onMounted(async () => {
   await fetchChallenges();
 });
 </script>
-
-<style scoped>
-ion-segment {
-  margin: 8px;
-}
-.pagination-controls {
-  margin-top: 16px;
-  text-align: center;
-}
-</style>

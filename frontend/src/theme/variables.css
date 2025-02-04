@@ -1,4 +1,79 @@
-ion-content, ion-header, ion-footer, ion-toolbar {
-    all: unset;
-  }
-  
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap');
+
+:root {
+  --background: #213556;
+  --container-bg: #192945;
+  --input-bg: #EBF2F8;
+  --input-text: #5A74B4;
+  --button-bg: #86AFD7;
+  --button-text: #FFFFFF;
+  --text-color: #D3DCF1;
+  --font-family: 'Raleway', sans-serif;
+}
+
+body,
+ion-app,
+ion-content {
+  background-color: var(--background);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+
+.container,
+ion-card {
+  background-color: var(--container-bg);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px;
+}
+
+ion-input,
+input,
+textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  font-family: var(--font-family);
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+ion-button,
+.button {
+  background-color: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  font-family: var(--font-family);
+}
+
+ion-toolbar {
+  background-color: var(--container-bg) !important;
+  color: var(--text-color) !important;
+  font-family: var(--font-family);
+}
+
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--container-bg);
+  color: var(--text-color);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+ion-router-outlet {
+  margin-bottom: 60px;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, label {
+  color: var(--text-color);
+  font-family: var(--font-family);
+}

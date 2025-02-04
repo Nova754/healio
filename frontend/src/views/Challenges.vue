@@ -1,5 +1,6 @@
 <template>
     <ion-page>
+      <navbar2 />
       <ion-header>
         <ion-toolbar>
           <ion-title>Challenges</ion-title>
@@ -24,10 +25,17 @@
         </ion-list>
         <ion-spinner v-else></ion-spinner>
       </ion-content>
+      <ion-footer>
+      <ion-toolbar>
+        <Navbar />
+      </ion-toolbar>
+    </ion-footer>
     </ion-page>
   </template>
   
   <script setup lang="ts">
+  import Navbar2 from '@/components/Navbar2.vue';
+  import Navbar from '@/components/Navbar.vue';
   import { ref, onMounted } from 'vue';
   import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonSpinner } from '@ionic/vue';
   import axios from 'axios';
@@ -61,7 +69,3 @@
     fetchChallenges();
   });
   </script>
-  
-  <style scoped>
-  </style>
-  

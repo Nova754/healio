@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <Navbar />
+    <Navbar2 />
 
     <ion-header>
       <ion-toolbar>
@@ -45,6 +45,11 @@
       
       <ion-spinner v-else></ion-spinner>
     </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <Navbar />
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -58,6 +63,7 @@ import {
 } from '@ionic/vue';
 import axios from 'axios';
 import Navbar from '@/components/Navbar.vue';
+import Navbar2 from '@/components/Navbar2.vue';
 
 const user = ref<any>(null);
 const password = ref('');
@@ -76,7 +82,6 @@ const fetchUserProfile = async () => {
     const response = await axios.get(`http://localhost:8081/api/users/${storedUser.id}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
-
     user.value = response.data;
   } catch (error) {
     console.error("Erreur lors de la récupération du profil:", error);
@@ -93,7 +98,7 @@ const updateProfile = async () => {
     return;
   }
 
-  const updates = {
+  const updates: any = {
     firstName: user.value.firstName.trim(),
     lastName: user.value.lastName.trim(),
     email: user.value.email.trim(),
@@ -114,7 +119,6 @@ const updateProfile = async () => {
     const response = await axios.patch(`http://localhost:8081/api/users/${user.value.id}`, updates, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' }
     });
-
     console.log("Réponse du serveur :", response.data);
     successMessage.value = "Profil mis à jour avec succès!";
   } catch (error) {

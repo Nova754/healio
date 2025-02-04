@@ -1,11 +1,8 @@
 <template>
   <ion-page>
-    <Navbar />
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Publications</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <!-- Navbar2 en haut avec fond -->
+    <Navbar2 />
+
     <ion-content :fullscreen="true">
       <ion-list v-if="posts.length">
         <ion-card v-for="post in posts" :key="post.id">
@@ -25,6 +22,7 @@
           <ion-card-content @click="openPostModal(post)" style="cursor: pointer;">
             <p>{{ truncateContent(post.content) }}</p>
           </ion-card-content>
+
           <ion-row class="ion-justify-content-between">
             <ion-button fill="clear" @click="toggleLike(post.id)">
               <ion-icon :icon="post.likedByUser ? heart : heartOutline" slot="start"></ion-icon>
@@ -35,6 +33,7 @@
               Commentaires ({{ post.comments.length }})
             </ion-button>
           </ion-row>
+
           <ion-list v-if="post.showComments">
             <ion-item v-for="comment in post.comments" :key="comment.id">
               <ion-label>
@@ -42,7 +41,9 @@
                 <p>{{ comment.comment_text }}</p>
               </ion-label>
               <ion-buttons v-if="user && comment.user_id === user.id">
-                <ion-button fill="clear" color="danger" @click="deleteComment(post.id, comment.id)">🗑️</ion-button>
+                <ion-button fill="clear" color="danger" @click="deleteComment(post.id, comment.id)">
+                  🗑️
+                </ion-button>
               </ion-buttons>
             </ion-item>
             <ion-item>
@@ -65,8 +66,8 @@
         </ion-header>
         <ion-content class="ion-padding">
           <div v-if="selectedPost">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
+            <div class="modal-header">
+              <div class="modal-header-text">
                 <router-link
                   :to="{ name: 'PublisherProfile', params: { id: selectedPost.user_id } }"
                   class="publisher-link"
@@ -78,15 +79,15 @@
                 </router-link>
                 <p class="date">{{ formatDate(selectedPost.created_at) }}</p>
               </div>
-              <div class="likes" style="display: flex; align-items: center; cursor: pointer;" @click="toggleLike(selectedPost.id)">
-                <ion-icon :icon="selectedPost.likedByUser ? heart : heartOutline" style="margin-right: 4px;"></ion-icon>
+              <div class="likes" @click="toggleLike(selectedPost.id)">
+                <ion-icon :icon="selectedPost.likedByUser ? heart : heartOutline"></ion-icon>
                 <span>{{ selectedPost.likes }}</span>
               </div>
             </div>
-            <div class="article-content" style="margin-top: 16px;">
+            <div class="article-content">
               <p>{{ selectedPost.content }}</p>
             </div>
-            <div class="comments-section" style="margin-top: 24px;">
+            <div class="comments-section">
               <h3>Commentaires</h3>
               <ion-list>
                 <ion-item v-for="comment in selectedPost.comments" :key="comment.id">
@@ -105,14 +106,26 @@
         </ion-content>
       </ion-modal>
     </ion-content>
+
+    <!-- Navbar en bas -->
+    <ion-footer>
+      <ion-toolbar>
+        <Navbar />
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonSpinner, IonRow, IonButtons, IonModal } from '@ionic/vue';
+import {
+  IonPage, IonContent, IonList, IonCard, IonCardHeader, IonCardTitle,
+  IonCardSubtitle, IonCardContent, IonItem, IonLabel, IonInput, IonButton,
+  IonIcon, IonSpinner, IonRow, IonButtons, IonModal, IonFooter
+} from '@ionic/vue';
 import { chatbubbleOutline, heartOutline, heart } from 'ionicons/icons';
 import axios from 'axios';
+import Navbar2 from '@/components/Navbar2.vue';
 import Navbar from '@/components/Navbar.vue';
 
 interface Post {
@@ -133,23 +146,10 @@ interface Post {
 const posts = ref<Post[]>([]);
 const newComment = ref<Record<number, string>>({});
 const user = ref<any>(null);
-const mySubscriptions = ref<number[]>([]);
 
 const selectedPost = ref<Post | null>(null);
 const isPostModalOpen = ref<boolean>(false);
 const newCommentModal = ref<string>('');
-
-const fetchSubscriptions = async () => {
-  if (!user.value) return;
-  try {
-    const response = await axios.get(`http://localhost:8081/api/subscriptions/${user.value.id}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    });
-    mySubscriptions.value = response.data.map((u: any) => u.id);
-  } catch (error) {
-    console.error("Erreur lors du chargement des abonnements:", error);
-  }
-};
 
 const fetchPosts = async () => {
   try {
@@ -282,39 +282,11 @@ const deleteComment = async (postId: number, commentId: number) => {
 
 const truncateContent = (content: string) => {
   const maxLength = 150;
-  if (content.length <= maxLength) return content;
-  return content.substring(0, maxLength) + '...';
+  return content.length <= maxLength ? content : content.substring(0, maxLength) + '...';
 };
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString();
-};
-
-const isSubscribed = (publisherId: number) => {
-  return mySubscriptions.value.includes(publisherId);
-};
-
-const toggleSubscription = async (publisherId: number) => {
-  if (!user.value) return;
-  try {
-    if (mySubscriptions.value.includes(publisherId)) {
-      await axios.delete('http://localhost:8081/api/subscriptions', {
-        data: { followerId: user.value.id, followedId: publisherId },
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      mySubscriptions.value = mySubscriptions.value.filter(id => id !== publisherId);
-    } else {
-      await axios.post('http://localhost:8081/api/subscriptions', {
-        followerId: user.value.id,
-        followedId: publisherId
-      }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      mySubscriptions.value.push(publisherId);
-    }
-  } catch (error) {
-    console.error("Erreur lors de la modification de l'abonnement :", error);
-  }
 };
 
 const openPostModal = async (post: Post) => {
@@ -331,18 +303,5 @@ const closePostModal = () => {
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem('user') || 'null');
   await fetchPosts();
-  await fetchSubscriptions();
 });
 </script>
-
-<style scoped>
-
-.date {
-  font-size: 0.9em;
-  color: #00ff1a;
-}
-.publisher-link {
-  text-decoration: none;
-  color: inherit;
-}
-</style>

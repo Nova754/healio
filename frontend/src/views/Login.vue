@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page class="login-page">
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Connexion</ion-title>
@@ -7,7 +7,7 @@
     </ion-header>
 
     <ion-content class="ion-padding">
-      <ion-card>
+      <ion-card class="login-card">
         <ion-card-header>
           <ion-card-title>Se connecter</ion-card-title>
         </ion-card-header>

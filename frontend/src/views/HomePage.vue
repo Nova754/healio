@@ -1,6 +1,5 @@
 <template>
   <ion-page>
-    <!-- Navbar2 en haut avec fond -->
     <Navbar2 />
 
     <ion-content :fullscreen="true">
@@ -17,6 +16,7 @@
               </router-link>
             </ion-card-title>
             <ion-card-subtitle>{{ formatDate(post.created_at) }}</ion-card-subtitle>
+            {{ post.title }}
           </ion-card-header>
 
           <ion-card-content @click="openPostModal(post)" style="cursor: pointer;">
@@ -107,7 +107,6 @@
       </ion-modal>
     </ion-content>
 
-    <!-- Navbar en bas -->
     <ion-footer>
       <ion-toolbar>
         <Navbar />

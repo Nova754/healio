@@ -34,7 +34,6 @@
   <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
   
-  /* Fond de la navbar et éléments */
   ion-header,
   ion-toolbar {
     background-color: #192945;

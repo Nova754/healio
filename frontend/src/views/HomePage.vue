@@ -1,12 +1,11 @@
 <template>
   <ion-page>
     <Navbar2 />
-
     <ion-content :fullscreen="true">
-      <ion-list v-if="posts.length">
-        <ion-card v-for="post in posts" :key="post.id">
-          <ion-card-header>
-            <ion-card-title>
+      <ion-list v-if="posts.length" class="posts-list">
+        <ion-card v-for="post in posts" :key="post.id" class="post-card">
+          <ion-card-header class="post-header">
+            <ion-card-title class="post-author">
               <router-link
                 :to="{ name: 'PublisherProfile', params: { id: post.user_id } }"
                 class="publisher-link"
@@ -15,57 +14,57 @@
                 {{ post.lastName ? post.lastName : '' }}
               </router-link>
             </ion-card-title>
-            <ion-card-subtitle>{{ formatDate(post.created_at) }}</ion-card-subtitle>
-            {{ post.title }}
+            <ion-card-subtitle class="post-date">{{ formatDate(post.created_at) }}</ion-card-subtitle>
+            <h2 class="post-title">{{ post.title }}</h2>
           </ion-card-header>
 
-          <ion-card-content @click="openPostModal(post)" style="cursor: pointer;">
-            <p>{{ truncateContent(post.content) }}</p>
+          <ion-card-content @click="openPostModal(post)" class="post-content">
+            <p class="post-text">{{ truncateContent(post.content) }}</p>
           </ion-card-content>
 
-          <ion-row class="ion-justify-content-between">
-            <ion-button fill="clear" @click="toggleLike(post.id)">
+          <ion-row class="post-actions">
+            <ion-button fill="clear" @click="toggleLike(post.id)" class="like-button">
               <ion-icon :icon="post.likedByUser ? heart : heartOutline" slot="start"></ion-icon>
               {{ post.likes }} Likes
             </ion-button>
-            <ion-button fill="clear" @click="toggleComments(post.id)">
+            <ion-button fill="clear" @click="toggleComments(post.id)" class="comment-button">
               <ion-icon :icon="chatbubbleOutline" slot="start"></ion-icon>
-              Commentaires ({{ post.comments.length }})
+              Commentaires
             </ion-button>
           </ion-row>
 
-          <ion-list v-if="post.showComments">
-            <ion-item v-for="comment in post.comments" :key="comment.id">
-              <ion-label>
-                <strong>{{ comment.firstName }} {{ comment.lastName }}</strong>
+          <ion-list v-if="post.showComments" class="comments-list">
+            <ion-item v-for="comment in post.comments" :key="comment.id" class="comment-item">
+              <ion-label class="comment-text">
+                <strong class="comment-author">{{ comment.firstName }} {{ comment.lastName }}</strong>
                 <p>{{ comment.comment_text }}</p>
               </ion-label>
-              <ion-buttons v-if="user && comment.user_id === user.id">
-                <ion-button fill="clear" color="danger" @click="deleteComment(post.id, comment.id)">
+              <ion-buttons v-if="user && comment.user_id === user.id" class="comment-actions">
+                <ion-button fill="clear" color="danger" @click="deleteComment(post.id, comment.id)" class="delete-comment">
                   🗑️
                 </ion-button>
               </ion-buttons>
             </ion-item>
-            <ion-item>
+            <ion-item class="new-comment">
               <ion-input v-model="newComment[post.id]" placeholder="Écrire un commentaire..."></ion-input>
-              <ion-button @click="addComment(post.id)">Envoyer</ion-button>
+              <ion-button @click="addComment(post.id)" class="send-comment">Envoyer</ion-button>
             </ion-item>
           </ion-list>
         </ion-card>
       </ion-list>
-      <ion-spinner v-else></ion-spinner>
+      <ion-spinner v-else class="loading-spinner"></ion-spinner>
 
-      <ion-modal v-model:isOpen="isPostModalOpen">
-        <ion-header>
+      <ion-modal v-model:isOpen="isPostModalOpen" class="post-modal">
+        <ion-header class="modal-header">
           <ion-toolbar>
-            <ion-title>{{ selectedPost?.title }}</ion-title>
+            <ion-title class="modal-title">{{ selectedPost?.title }}</ion-title>
             <ion-buttons slot="end">
-              <ion-button @click="closePostModal">Fermer</ion-button>
+              <ion-button @click="closePostModal" class="close-modal">Fermer</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
-          <div v-if="selectedPost">
+        <ion-content class="ion-padding modal-content">
+          <div v-if="selectedPost" class="modal-body">
             <div class="modal-header">
               <div class="modal-header-text">
                 <router-link
@@ -77,29 +76,29 @@
                     {{ selectedPost.lastName ? selectedPost.lastName : '' }}
                   </strong>
                 </router-link>
-                <p class="date">{{ formatDate(selectedPost.created_at) }}</p>
+                <p class="modal-date">{{ formatDate(selectedPost.created_at) }}</p>
               </div>
-              <div class="likes" @click="toggleLike(selectedPost.id)">
+              <div class="modal-likes" @click="toggleLike(selectedPost.id)">
                 <ion-icon :icon="selectedPost.likedByUser ? heart : heartOutline"></ion-icon>
                 <span>{{ selectedPost.likes }}</span>
               </div>
             </div>
             <div class="article-content">
-              <p>{{ selectedPost.content }}</p>
+              <p class="full-post-content">{{ selectedPost.content }}</p>
             </div>
             <div class="comments-section">
-              <h3>Commentaires</h3>
-              <ion-list>
-                <ion-item v-for="comment in selectedPost.comments" :key="comment.id">
-                  <ion-label>
-                    <strong>{{ comment.firstName }} {{ comment.lastName }}</strong>
+              <h3 class="comments-title">Commentaires</h3>
+              <ion-list class="modal-comments-list">
+                <ion-item v-for="comment in selectedPost.comments" :key="comment.id" class="modal-comment-item">
+                  <ion-label class="modal-comment-text">
+                    <strong class="modal-comment-author">{{ comment.firstName }} {{ comment.lastName }}</strong>
                     <p>{{ comment.comment_text }}</p>
                   </ion-label>
                 </ion-item>
               </ion-list>
-              <ion-item>
+              <ion-item class="modal-new-comment">
                 <ion-input v-model="newCommentModal" placeholder="Écrire un commentaire..."></ion-input>
-                <ion-button @click="addCommentModal(selectedPost.id)">Envoyer</ion-button>
+                <ion-button @click="addCommentModal(selectedPost.id)" class="send-modal-comment">Envoyer</ion-button>
               </ion-item>
             </div>
           </div>
@@ -107,8 +106,8 @@
       </ion-modal>
     </ion-content>
 
-    <ion-footer>
-      <ion-toolbar>
+    <ion-footer class="footer">
+      <ion-toolbar class="footer-toolbar">
         <Navbar />
       </ion-toolbar>
     </ion-footer>

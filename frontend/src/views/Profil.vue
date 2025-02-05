@@ -37,7 +37,7 @@
             </ion-item>
           </ion-list>
 
-          <ion-button expand="full" @click="updateProfile">Modifier</ion-button>
+          <ion-button expand="full" @click="updateProfile" class="profil-modif">Modifier</ion-button>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
           <p v-if="successMessage" class="success">{{ successMessage }}</p>
         </ion-card-content>

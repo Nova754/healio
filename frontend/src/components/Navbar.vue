@@ -4,10 +4,11 @@
       <ion-title>Healio</ion-title>
       <ion-buttons slot="end">
         <ion-button v-for="link in filteredLinks" :key="link.path" @click="navigateTo(link.path)">
+          <ion-icon :icon="link.icon" slot="start"></ion-icon>
           {{ link.label }}
         </ion-button>
         <ion-button v-if="isAdmin" @click="navigateTo('/admindashboard')">
-          Dashboard Admin
+          Dashboard
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
@@ -17,7 +18,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton } from '@ionic/vue';
+import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon } from '@ionic/vue';
+import { home, create, person, trophy, logOut, logIn, personAdd, settings } from 'ionicons/icons'; 
 
 const router = useRouter();
 const route = useRoute();
@@ -51,17 +53,17 @@ const logout = () => {
 const filteredLinks = computed(() => {
   if (isAuthenticated.value) {
     return [
-      { path: '/home', label: 'Home' },
-      { path: '/create-post', label: 'Créer une publication' },
-      { path: '/profile', label: 'Mon Profil' },
-      { path: '/challenges', label: 'Challenges' },
-      { path: '/logout', label: 'Logout', action: logout }
+      { path: '/home', icon: home },
+      { path: '/create-post', icon: create },
+      { path: '/profile',  icon: person },
+      { path: '/challenges',  icon: trophy },
+      { path: '/logout',  icon: logOut, action: logout }
     ];
   } else {
     return [
-      { path: '/home', label: 'Home' },
-      { path: '/login', label: 'Login' },
-      { path: '/register', label: 'Register' }
+      { path: '/home', icon: home },
+      { path: '/login',  icon: logIn },
+      { path: '/register',  icon: personAdd }
     ];
   }
 });
@@ -79,7 +81,7 @@ onMounted(checkAuth);
 
 <style scoped>
 ion-toolbar {
-  --background: #3880ff;
+  --background: #192945;
   --color: white;
 }
 ion-button {

@@ -6,6 +6,19 @@ const bcrypt = require('bcrypt');
 
 const router = express.Router();
 
+const validatePassword = (password) => {
+    const minLength = /.{11,}/;
+    const upperCase = /.*[A-Z].*[A-Z]/;
+    const lowerCase = /.*[a-z].*[a-z]/;
+    const digits = /.*\d.*\d/;
+    const specialChar = /.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>?/].*/;
+    return minLength.test(password) &&
+           upperCase.test(password) &&
+           lowerCase.test(password) &&
+           digits.test(password) &&
+           specialChar.test(password);
+};
+
 router.get('/', authenticateToken, authorizeRole('user'), async (req, res) => {
     try {
         const users = await sequelize.query(
@@ -44,6 +57,11 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
     if (!firstName || !lastName || !email || !password || !role) {
         return res.status(400).json({ message: "Tous les champs obligatoires doivent être renseignés." });
     }
+    if (!validatePassword(password)) {
+        return res.status(400).json({
+            message: "Le mot de passe doit contenir au moins 11 caractères, 2 majuscules, 2 minuscules, 2 chiffres et 1 caractère spécial."
+        });
+    }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         await sequelize.query(
@@ -56,7 +74,7 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
         res.status(201).json({ message: "Utilisateur créé avec succès." });
     } catch (error) {
         console.error('Erreur lors de la création de l\'utilisateur :', error);
-        res.status(500).json({ message: 'Erreur interne du serveur' });
+        res.status(500).json({ message: 'Erreur interne du serveur.' });
     }
 });
 
@@ -66,12 +84,18 @@ router.put('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
     if (req.user.id !== parseInt(id, 10) && req.user.role !== 'admin') {
         return res.status(403).json({ message: "Vous ne pouvez modifier que vos propres informations." });
     }
+    if (password && !validatePassword(password)) {
+        return res.status(400).json({
+            message: "Le mot de passe doit contenir au moins 11 caractères, 2 majuscules, 2 minuscules, 2 chiffres et 1 caractère spécial."
+        });
+    }
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
     try {
         const [updated] = await sequelize.query(
-            'UPDATE users SET firstName = :firstName, lastName = :lastName, email = :email, bio = :bio, password = :password WHERE id = :id',
+            'UPDATE users SET firstName = :firstName, lastName = :lastName, email = :email, bio = :bio, password = COALESCE(:password, password) WHERE id = :id',
             {
                 type: QueryTypes.UPDATE,
-                replacements: { firstName, lastName, email, bio, password, id },
+                replacements: { firstName, lastName, email, bio, password: hashedPassword, id },
             }
         );
         if (updated === 0) {
@@ -80,7 +104,7 @@ router.put('/:id', authenticateToken, authorizeRole('user'), async (req, res) =>
         res.status(200).json({ message: "Informations mises à jour avec succès." });
     } catch (error) {
         console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
-        res.status(500).json({ message: 'Erreur interne du serveur' });
+        res.status(500).json({ message: 'Erreur interne du serveur.' });
     }
 });
 
@@ -90,16 +114,12 @@ router.patch('/:id', authenticateToken, authorizeRole('user'), async (req, res) 
     if (!updates || Object.keys(updates).length === 0) {
         return res.status(400).json({ message: "Aucune donnée à mettre à jour." });
     }
-    if (updates.email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(updates.email)) {
-            return res.status(400).json({ message: "Email invalide." });
-        }
+    if (updates.password && !validatePassword(updates.password)) {
+        return res.status(400).json({
+            message: "Le mot de passe doit contenir au moins 11 caractères, 2 majuscules, 2 minuscules, 2 chiffres et 1 caractère spécial."
+        });
     }
     if (updates.password) {
-        if (updates.password.length < 6) {
-            return res.status(400).json({ message: "Le mot de passe doit contenir au moins 6 caractères." });
-        }
         updates.password = await bcrypt.hash(updates.password, 10);
     }
     const setClause = Object.keys(updates)

@@ -76,6 +76,23 @@ const navigateTo = (path) => {
 };
 
 onMounted(checkAuth);
+
+
+const applyThemeAuth = () => {
+  const link = document.getElementById("navbar-theme-style");
+  if (!link) {
+    const newLink = document.createElement("link");
+    newLink.id = "navbar-theme-style";
+    newLink.rel = "stylesheet";
+    newLink.href = "/src/theme/themehome.css";
+    document.head.appendChild(newLink);
+  }
+};
+
+onMounted(() => {
+  applyThemeAuth();
+});
+
 </script>
 
 <style scoped>

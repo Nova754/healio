@@ -5,7 +5,7 @@ const { QueryTypes } = require('sequelize');
 
 const router = express.Router();
 
-router.get('/', authenticateToken, authorizeRole('user'), async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const posts = await sequelize.query(
             `SELECT p.id, p.title, p.content, p.images, p.created_at, 
@@ -24,7 +24,7 @@ router.get('/', authenticateToken, authorizeRole('user'), async (req, res) => {
     }
 });
 
-router.get('/:id', authenticateToken, authorizeRole('user'), async (req, res) => {
+router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const post = await sequelize.query(

@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    <Navbar2 />
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Inscription</ion-title>
@@ -40,12 +41,20 @@
             v-model="confirmPassword"
             type="password"
             label="Confirmer le mot de passe"
-            placeholder="Confirmez votre mot de passe">
+            placeholder="Confirmez">
           </ion-input>
 
           <ion-button expand="full" @click="register">S'inscrire</ion-button>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
           <p v-if="successMessage" class="success">{{ successMessage }}</p>
+
+          <div class="login-link">
+            <p>Déjà un compte ?</p>
+            <ion-button fill="clear" @click="goToLogin" color="primary">
+              Se connecter
+            </ion-button>
+          </div>
+
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -60,6 +69,7 @@ import {
   IonCardHeader, IonCardTitle, IonCardContent, IonInput, IonButton 
 } from '@ionic/vue';
 import axios from 'axios';
+import Navbar2 from '@/components/Navbar2.vue';
 
 const firstName = ref('');
 const lastName = ref('');
@@ -93,7 +103,7 @@ const register = async () => {
     });
 
     successMessage.value = "Inscription réussie ! Redirection...";
-    
+
     setTimeout(() => {
       router.push('/login'); 
     }, 2000);
@@ -102,4 +112,21 @@ const register = async () => {
     errorMessage.value = "Cet email est déjà utilisé ou une erreur s'est produite.";
   }
 };
+
+const goToLogin = () => {
+  router.push('/login');
+};
 </script>
+
+<style scoped>
+
+.login-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.login-link p {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+</style>

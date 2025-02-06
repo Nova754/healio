@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap');
 
-ion-list, ion-item, ion-button, ion-cart {
+ion-list, ion-item, ion-button {
   all: unset;
 }
 
@@ -117,24 +117,12 @@ ion-button.md {
   --color: #D3DCF1;
 }
 
-ion-button.md {
+.profil-modif {
   --background: #86AFD7;
-}
-
-ion-content.md.content-ltr {
-  --background: #0b2e6c;
   --color: #D3DCF1;
 }
 
-ion-card.md {
-  --background: #2F5593;
+ion-content.md.content-ltr.ion-padding {
+  --background: #56637a;
   --color: #D3DCF1;
 }
-
-
-ion-item {
-  --background: none;
-  --color: #D3DCF1;
-}
-
-

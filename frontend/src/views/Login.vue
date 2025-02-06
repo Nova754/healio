@@ -1,5 +1,6 @@
 <template>
   <ion-page class="login-page">
+    <Navbar2 />
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Connexion</ion-title>
@@ -27,6 +28,14 @@
 
           <ion-button expand="full" @click="login">Connexion</ion-button>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+
+          <div class="register-link">
+            <p>Vous n'êtes pas encore inscrit ?</p>
+            <ion-button fill="clear" @click="goToRegister" color="primary">
+              S'inscrire
+            </ion-button>
+          </div>
+
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -41,6 +50,7 @@ import {
   IonCardHeader, IonCardTitle, IonCardContent, IonInput, IonButton 
 } from '@ionic/vue';
 import axios from 'axios';
+import Navbar2 from '@/components/Navbar2.vue';
 
 const email = ref('');
 const password = ref('');
@@ -71,5 +81,21 @@ const login = async () => {
     errorMessage.value = "Email ou mot de passe incorrect.";
   }
 };
+
+const goToRegister = () => {
+  router.push('/register');
+};
 </script>
 
+<style scoped>
+
+.register-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.register-link p {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+</style>

@@ -1,8 +1,7 @@
 <template>
   <ion-header v-if="showNavbar">
-    <ion-toolbar>
-      <ion-title>Healio</ion-title>
-      <ion-buttons slot="end">
+    <ion-toolbar class="navbar">
+      <ion-buttons>
         <ion-button v-for="link in filteredLinks" :key="link.path" @click="navigateTo(link.path)">
           <ion-icon :icon="link.icon" slot="start"></ion-icon>
           {{ link.label }}
@@ -62,8 +61,8 @@ const filteredLinks = computed(() => {
   } else {
     return [
       { path: '/home', icon: home },
-      { path: '/login',  icon: logIn },
-      { path: '/register',  icon: personAdd }
+      { path: '/login', label: 'Se connecter' },
+      { path: '/register',  label: 'S\'inscrire' }
     ];
   }
 });

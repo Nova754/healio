@@ -49,7 +49,6 @@
           </ion-card-content>
         </ion-card>
 
-        <!-- ✅ Section des badges obtenus -->
         <ion-card>
           <ion-card-header>
             <ion-card-title>🏅 Badges obtenus</ion-card-title>
@@ -70,7 +69,6 @@
           </ion-card-content>
         </ion-card>
 
-        <!-- ✅ Section de tous les badges disponibles -->
         <ion-card>
           <ion-card-header>
             <ion-card-title>🎖️ Tous les badges disponibles</ion-card-title>
@@ -124,12 +122,10 @@ const errorMessage = ref('');
 const successMessage = ref('');
 const router = useRouter();
 
-// ✅ Fonction pour aller aux paramètres
 const goToSettings = () => {
   router.push('/settings');
 };
 
-// ✅ Récupération des informations utilisateur
 const fetchUserProfile = async () => {
   const storedUser = JSON.parse(localStorage.getItem('user'));
   if (!storedUser || !storedUser.id) {
@@ -150,7 +146,6 @@ const fetchUserProfile = async () => {
   }
 };
 
-// ✅ Récupération des badges obtenus par l'utilisateur
 const fetchUserBadges = async (userId: number) => {
   try {
     const response = await axios.get(`http://localhost:8081/api/badges/user/${userId}`, {
@@ -162,7 +157,6 @@ const fetchUserBadges = async (userId: number) => {
   }
 };
 
-// ✅ Récupération de tous les badges existants
 const fetchAllBadges = async () => {
   try {
     const response = await axios.get(`http://localhost:8081/api/badges`, {
@@ -174,7 +168,6 @@ const fetchAllBadges = async () => {
   }
 };
 
-// ✅ Mise à jour du profil utilisateur
 const updateProfile = async () => {
   if (!user.value) return;
 

@@ -9,6 +9,7 @@
               <router-link
                 :to="{ name: 'PublisherProfile', params: { id: post.user_id } }"
                 class="publisher-link"
+                :aria-label="'Voir le profil de ' + (post.firstName || 'Utilisateur inconnu') + ' ' + (post.lastName || '')"
               >
                 {{ post.firstName ? post.firstName : 'Utilisateur inconnu' }}
                 {{ post.lastName ? post.lastName : '' }}
@@ -18,17 +19,17 @@
             <h2 class="post-title">{{ post.title }}</h2>
           </ion-card-header>
 
-          <ion-card-content @click="openPostModal(post)" class="post-content">
+          <ion-card-content @click="openPostModal(post)" class="post-content" :aria-label="'Lire la publication : ' + post.title">
             <p class="post-text">{{ truncateContent(post.content) }}</p>
           </ion-card-content>
 
           <ion-row class="post-actions">
-            <ion-button fill="clear" @click="toggleLike(post.id)" class="like-button">
-              <ion-icon :icon="post.likedByUser ? heart : heartOutline" slot="start"></ion-icon>
+            <ion-button fill="clear" @click="toggleLike(post.id)" class="like-button" :aria-label="'Liker cette publication : ' + post.title">
+              <ion-icon :icon="post.likedByUser ? heart : heartOutline" slot="start" alt="Like icon"></ion-icon>
               {{ post.likes }} Likes
             </ion-button>
-            <ion-button fill="clear" @click="toggleComments(post.id)" class="comment-button">
-              <ion-icon :icon="chatbubbleOutline" slot="start"></ion-icon>
+            <ion-button fill="clear" @click="toggleComments(post.id)" class="comment-button" :aria-label="'Afficher les commentaires pour : ' + post.title">
+              <ion-icon :icon="chatbubbleOutline" slot="start" alt="Comment icon"></ion-icon>
               Commentaires
             </ion-button>
           </ion-row>
@@ -40,26 +41,26 @@
                 <p>{{ comment.comment_text }}</p>
               </ion-label>
               <ion-buttons v-if="user && comment.user_id === user.id" class="comment-actions">
-                <ion-button fill="clear" color="danger" @click="deleteComment(post.id, comment.id)" class="delete-comment">
+                <ion-button fill="clear" color="danger" @click="deleteComment(post.id, comment.id)" class="delete-comment" aria-label="Supprimer ce commentaire">
                   🗑️
                 </ion-button>
               </ion-buttons>
             </ion-item>
             <ion-item class="new-comment">
-              <ion-input v-model="newComment[post.id]" placeholder="Écrire un commentaire..."></ion-input>
+              <ion-input v-model="newComment[post.id]" placeholder="Écrire un commentaire..." aria-label="Ajouter un commentaire"></ion-input>
               <ion-button @click="addComment(post.id)" class="send-comment">Envoyer</ion-button>
             </ion-item>
           </ion-list>
         </ion-card>
       </ion-list>
-      <ion-spinner v-else class="loading-spinner"></ion-spinner>
+      <ion-spinner v-else class="loading-spinner" aria-label="Chargement des publications"></ion-spinner>
 
       <ion-modal v-model:isOpen="isPostModalOpen" class="post-modal">
         <ion-header class="modal-header">
           <ion-toolbar>
             <ion-title class="modal-title">{{ selectedPost?.title }}</ion-title>
             <ion-buttons slot="end">
-              <ion-button @click="closePostModal" class="close-modal">Fermer</ion-button>
+              <ion-button @click="closePostModal" class="close-modal" aria-label="Fermer la publication">Fermer</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
@@ -70,6 +71,7 @@
                 <router-link
                   :to="{ name: 'PublisherProfile', params: { id: selectedPost.user_id } }"
                   class="publisher-link"
+                  :aria-label="'Voir le profil de ' + (selectedPost.firstName || 'Utilisateur inconnu') + ' ' + (selectedPost.lastName || '')"
                 >
                   <strong>
                     {{ selectedPost.firstName ? selectedPost.firstName : 'Utilisateur inconnu' }}
@@ -79,7 +81,7 @@
                 <p class="modal-date">{{ formatDate(selectedPost.created_at) }}</p>
               </div>
               <div class="modal-likes" @click="toggleLike(selectedPost.id)">
-                <ion-icon :icon="selectedPost.likedByUser ? heart : heartOutline"></ion-icon>
+                <ion-icon :icon="selectedPost.likedByUser ? heart : heartOutline" alt="Like icon"></ion-icon>
                 <span>{{ selectedPost.likes }}</span>
               </div>
             </div>
@@ -97,7 +99,7 @@
                 </ion-item>
               </ion-list>
               <ion-item class="modal-new-comment">
-                <ion-input v-model="newCommentModal" placeholder="Écrire un commentaire..."></ion-input>
+                <ion-input v-model="newCommentModal" placeholder="Écrire un commentaire..." aria-label="Ajouter un commentaire"></ion-input>
                 <ion-button @click="addCommentModal(selectedPost.id)" class="send-modal-comment">Envoyer</ion-button>
               </ion-item>
             </div>

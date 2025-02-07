@@ -149,6 +149,14 @@ const selectedPost = ref<Post | null>(null);
 const isPostModalOpen = ref<boolean>(false);
 const newCommentModal = ref<string>('');
 
+const requireLogin = () => {
+  if (!user.value) {
+    router.push('/login');
+    return false;
+  }
+  return true;
+};
+
 const fetchPosts = async () => {
   try {
     const response = await axios.get('http://localhost:8081/api/posts', {
@@ -185,9 +193,11 @@ const fetchLikesForPost = async (postId: number) => {
 };
 
 const toggleLike = async (postId: number) => {
-  if (!user.value) return;
+  if (!requireLogin()) return;
+
   const post = posts.value.find(p => p.id === postId);
   if (!post) return;
+  
   try {
     if (post.likedByUser) {
       await axios.delete('http://localhost:8081/api/likes', {
@@ -223,17 +233,22 @@ const fetchComments = async (postId: number) => {
 };
 
 const toggleComments = async (postId: number) => {
+  if (!requireLogin()) return;
+
   const post = posts.value.find(p => p.id === postId);
   if (!post) return;
+  
   post.showComments = !post.showComments;
   if (post.showComments && post.comments.length === 0) {
     await fetchComments(postId);
   }
 };
 
+
 const addComment = async (postId: number) => {
-  if (!user.value) return;
+  if (!requireLogin()) return;
   if (!newComment.value[postId] || newComment.value[postId].trim() === '') return;
+
   try {
     await axios.post('http://localhost:8081/api/comments', {
       postId,

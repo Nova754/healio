@@ -23,7 +23,7 @@ if (!link) {
 };
 
 watch(route, (to) => {
-if (["/login", "/register", "/profil", "/create-post"].includes(to.path)) {
+if (["/login", "/register", "/profile", "/create-post", "/challenges", "/settings"].includes(to.path)) {
   applyTheme("/src/theme/themeauth.css");
 } else if (to.path === "/home") {
   applyTheme("/src/theme/themehome.css");
@@ -33,7 +33,7 @@ if (["/login", "/register", "/profil", "/create-post"].includes(to.path)) {
 });
 
 onMounted(() => {
-if (["/login", "/register", "/profil", "/create-post"].includes(route.path)) {
+if (["/login", "/register", "/profile", "/create-post", "/challenges", "/settings"].includes(route.path)) {
   applyTheme("/src/theme/themeauth.css");
 } else if (route.path === "/home") {
   applyTheme("/src/theme/themehome.css");

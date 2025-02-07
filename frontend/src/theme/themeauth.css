@@ -97,7 +97,20 @@ ion-button.md {
   padding: 10px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #333;
 }
+.biographie {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #333;
+  margin-left: 8.5%;
+}
+
 
 .comment-input ion-input {
   flex-grow: 1;
@@ -203,4 +216,14 @@ ion-button.md {
 .register-link p {
   margin-bottom: 5px;
   font-size: 14px;
+}
+
+ion-icon {
+  font-size: 20px;
+  color: #D3DCF1;
+}
+ion-list-header {
+  color: #D3DCF1;
+  font-weight: bolder;
+  font-size: larger;
 }

@@ -60,7 +60,7 @@ ion-button.md {
 .post-header .publisher-link::after {
   content: "";
   display: block;
-  width: 445px;
+  width: 360px;
   height: 1px;
   background-color: #D3DCF1;
   position: absolute;

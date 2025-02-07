@@ -35,7 +35,7 @@
               </ion-item>
               <ion-item>
                 <ion-label>Bio :</ion-label>
-                <ion-textarea v-model="user.bio" placeholder="Ajoutez une biographie"></ion-textarea>
+                <ion-textarea v-model="user.bio" placeholder="Ajoutez une biographie" class="biographie"></ion-textarea>
               </ion-item>
               <ion-item>
                 <ion-label>Nouveau mot de passe :</ion-label>
@@ -51,7 +51,7 @@
 
         <ion-card>
           <ion-card-header>
-            <ion-card-title>🏅 Badges obtenus</ion-card-title>
+            <ion-card-title>Badges obtenus</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-list v-if="badgesObtained.length > 0">
@@ -71,7 +71,7 @@
 
         <ion-card>
           <ion-card-header>
-            <ion-card-title>🎖️ Tous les badges disponibles</ion-card-title>
+            <ion-card-title>Tous les badges disponibles</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-list v-if="allBadges.length > 0">
@@ -87,6 +87,12 @@
             </ion-list>
             <p v-else>Chargement des badges...</p>
           </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-button @click="goToSettings" class="profil-modif">Settings</ion-button>
+          </ion-card-header>
         </ion-card>
       </template>
 

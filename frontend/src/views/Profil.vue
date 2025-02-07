@@ -91,7 +91,7 @@
 
         <ion-card>
           <ion-card-header>
-            <ion-button @click="goToSettings" class="profil-modif">Settings</ion-button>
+            <ion-button @click="goToSettings" class="profil-modif">Paramètres</ion-button>
           </ion-card-header>
         </ion-card>
       </template>

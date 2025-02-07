@@ -31,7 +31,7 @@
 
           <div class="register-link">
             <p>Vous n'êtes pas encore inscrit ?</p>
-            <ion-button fill="clear" @click="goToRegister" color="primary">
+            <ion-button fill="clear" @click="goToRegister" color="primary" text-decoration="underline">
               S'inscrire
             </ion-button>
           </div>
@@ -86,16 +86,3 @@ const goToRegister = () => {
   router.push('/register');
 };
 </script>
-
-<style scoped>
-
-.register-link {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.register-link p {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-</style>

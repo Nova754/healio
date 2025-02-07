@@ -98,7 +98,7 @@ const goToRegister = () => {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: rgba(255, 69, 58, 0.95);
+  background: #E5A0A0;
   color: white;
   padding: 15px;
   border-radius: 15px;

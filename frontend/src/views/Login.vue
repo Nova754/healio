@@ -1,11 +1,6 @@
 <template>
   <ion-page class="login-page">
     <Navbar2 />
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Connexion</ion-title>
-      </ion-toolbar>
-    </ion-header>
 
     <ion-content class="ion-padding">
       <ion-card class="login-card">

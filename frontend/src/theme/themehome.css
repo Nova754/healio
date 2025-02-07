@@ -30,8 +30,6 @@ ion-button.md {
   --padding-bottom: 10px;
 }
 
-/* Custom classes */
-
 .post-card {
   margin: 20px auto;
   padding: 10px;
@@ -64,14 +62,14 @@ ion-button.md {
   display: block;
   width: 445px;
   height: 1px;
-  background-color: #D3DCF1; /* Couleur de la ligne */
+  background-color: #D3DCF1;
   position: absolute;
   margin-top: 10px;
   left: 0;
 }
 .post-actions {
   display: flex;
-  justify-content: space-between; /* Espace entre les éléments */
+  justify-content: space-between;
   padding: 10px;
   align-items: center;
 }
@@ -91,7 +89,7 @@ ion-button.md {
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  background-color: #f9f9f9; /* Couleur de fond */
+  background-color: #f9f9f9;
   padding: 10px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

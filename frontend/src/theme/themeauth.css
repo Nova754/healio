@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap');
 
-ion-list, ion-item, ion-button, ion-cart, .sc-ion-input-md {
+:root {
+  --ion-color-primary: #86AFD7;
+}
+
+ion-list, ion-item, ion-button, .sc-ion-input-md {
   all: unset;
 }
 
@@ -131,7 +135,7 @@ ion-card.md {
 
 ion-card-title.md {
   --color: #D3DCF1;
-  margin-left: 35%; 
+  text-align: center;
   margin-top: 10px;
 }
 
@@ -181,4 +185,24 @@ ion-button.md {
   transition: transform 200ms;
   transition: transform 200ms, -webkit-transform 200ms;
   background: #0094e9;
+}
+
+.login-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.login-link p {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.register-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.register-link p {
+  margin-bottom: 5px;
+  font-size: 14px;
 }

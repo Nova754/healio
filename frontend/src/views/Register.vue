@@ -117,16 +117,3 @@ const goToLogin = () => {
   router.push('/login');
 };
 </script>
-
-<style scoped>
-
-.login-link {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.login-link p {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-</style>

@@ -4,6 +4,11 @@
 
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button @click="goToSettings">
+            <ion-icon :icon="settingsOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
         <ion-title>Mon Profil</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -45,6 +50,7 @@
       
       <ion-spinner v-else></ion-spinner>
     </ion-content>
+    
     <ion-footer>
       <ion-toolbar>
         <Navbar />
@@ -59,8 +65,9 @@ import { useRouter } from 'vue-router';
 import { 
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, 
   IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItem, 
-  IonLabel, IonInput, IonTextarea, IonButton, IonSpinner 
+  IonLabel, IonInput, IonTextarea, IonButton, IonSpinner, IonButtons, IonIcon 
 } from '@ionic/vue';
+import { settingsOutline } from 'ionicons/icons';
 import axios from 'axios';
 import Navbar from '@/components/Navbar.vue';
 import Navbar2 from '@/components/Navbar2.vue';
@@ -70,6 +77,10 @@ const password = ref('');
 const errorMessage = ref('');
 const successMessage = ref('');
 const router = useRouter();
+
+const goToSettings = () => {
+  router.push('/settings');
+};
 
 const fetchUserProfile = async () => {
   const storedUser = JSON.parse(localStorage.getItem('user'));

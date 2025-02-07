@@ -25,7 +25,6 @@
             label="Contenu"
             placeholder="Écrivez votre publication...">
           </ion-input>
-                    <input type="file" @change="handleImagesUpload" accept="image/*" multiple />
 
           <ion-button expand="full" @click="createPost">Publier</ion-button>
           <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
